@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "build": "echo 'No build step required'"
   },
   "keywords": ["websocket", "game-server", "realtime", "socket.io"],
   "author": "UWB Game Team",
@@ -16,6 +17,7 @@
     "cors": "^2.8.5"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": "20.x",
+    "npm": "10.x"
   }
 } 
