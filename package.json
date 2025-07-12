@@ -1,0 +1,21 @@
+{
+  "name": "uwb-game-server",
+  "version": "1.0.0",
+  "description": "Real-time WebSocket server for UWB Survival Game",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": ["websocket", "game-server", "realtime", "socket.io"],
+  "author": "UWB Game Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+} 
