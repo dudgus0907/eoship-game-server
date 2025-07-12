@@ -40,6 +40,7 @@ class GameServer {
         },
         timers: {
           gameTimer: null,
+          gameTimerUpdateInterval: null,
           eliminationRiskTimers: new Map(),
           chaseTimers: new Map()
         },
@@ -91,6 +92,10 @@ class GameServer {
       clearTimeout(game.timers.gameTimer);
     }
     
+    if (game.timers.gameTimerUpdateInterval) {
+      clearInterval(game.timers.gameTimerUpdateInterval);
+    }
+    
     const duration = customDuration || game.settings.gameDuration;
     const startTime = Date.now();
     
@@ -101,6 +106,21 @@ class GameServer {
     game.timers.gameTimer = setTimeout(() => {
       this.endGame(gameId, 'timeout');
     }, duration);
+    
+    // 1초마다 클라이언트에게 남은 시간 전송
+    game.timers.gameTimerUpdateInterval = setInterval(() => {
+      const now = Date.now();
+      const remainingTime = Math.max(0, game.endTime - now);
+      
+      if (remainingTime > 0) {
+        io.to(gameId).emit('game_timer_update', {
+          gameId,
+          remainingTime,
+          endTime: game.endTime,
+          serverTime: now
+        });
+      }
+    }, 1000);
     
     io.to(gameId).emit('game_timer_started', {
       gameId,
@@ -314,6 +334,11 @@ class GameServer {
     if (game.timers.gameTimer) {
       clearTimeout(game.timers.gameTimer);
       game.timers.gameTimer = null;
+    }
+    
+    if (game.timers.gameTimerUpdateInterval) {
+      clearInterval(game.timers.gameTimerUpdateInterval);
+      game.timers.gameTimerUpdateInterval = null;
     }
     
     game.timers.eliminationRiskTimers.forEach(timer => clearTimeout(timer));
